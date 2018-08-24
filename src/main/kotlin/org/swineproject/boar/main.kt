@@ -18,7 +18,6 @@ fun main(args: Array<String>) {
     val boarWidget = BoarWidget(display, shell)
 
     val sideBar = SideBar(shell, boarWidget)
-    sideBar.showSideBar(false)
     // sideBar.boarWidget = boarWidget
     boarWidget.sideBar = sideBar
 

@@ -15,6 +15,7 @@ class SideBar(parent: Composite, val boarWidget: BoarWidget) {
     private var group = Group(parent, SWT.NULL)
     private var spinnerX: Spinner
     private var spinnerY: Spinner
+    private var nameLabel: Label
 
     private var nodePosition: Array<Int>? = null
 
@@ -23,6 +24,13 @@ class SideBar(parent: Composite, val boarWidget: BoarWidget) {
         groupLayout.numColumns = 5
         group.layout = groupLayout
         group.layoutData = GridData(GridData.FILL_BOTH)
+
+        Label(group, SWT.NONE).text = "Selected:"
+        nameLabel = Label(group, SWT.NONE)
+        nameLabel.text = "None"
+        val nameLayout = GridData(GridData.FILL_HORIZONTAL)
+        nameLayout.horizontalSpan = 4
+        nameLabel.layoutData = nameLayout
 
         Label(group, SWT.NONE).text = "Position:"
         Label(group, SWT.NONE).text = "X"
@@ -55,19 +63,10 @@ class SideBar(parent: Composite, val boarWidget: BoarWidget) {
         })
     }
 
-    fun showSideBar(show: Boolean) {
-        group.visible = show
-    }
-
     fun update() {
-        // val xField = Spinner::class.java.getDeclaredField("text")
-        // xField.isAccessible = true
-        // xField.set(spinnerX, boarWidget.selectedNode!!.x.toString())
-
-        // val yField = Spinner::class.java.getField("text")
-        // yField.isAccessible = true
-
         if (boarWidget.selectedNode != null) {
+            nameLabel.text = boarWidget.selectedNode!!.name
+
             nodePosition = Util.centerPosition(boarWidget.selectedNode!!.x, boarWidget.selectedNode!!.y, boarWidget.clientArea.width, boarWidget.clientArea.height)
 
             if (!spinnerX.isFocusControl) {

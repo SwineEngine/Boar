@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.Display
 import org.eclipse.swt.widgets.Event
 import org.eclipse.swt.widgets.Listener
 
-class Node(parent: BoarWidget, var x: Int, var y: Int, val size: Int) {
+class Node(parent: BoarWidget, val name: String, var x: Int, var y: Int, val size: Int) {
     var self = this
 
     var colour = Display.getDefault().getSystemColor(SWT.COLOR_BLACK)!!
@@ -45,7 +45,6 @@ class Node(parent: BoarWidget, var x: Int, var y: Int, val size: Int) {
                     parent.editingNode = self
 
                     mode = "editing"
-                    parent.sideBar.showSideBar(mode == "editing")
                 }
             }
 

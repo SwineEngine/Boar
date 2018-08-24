@@ -39,7 +39,7 @@ class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDE
 
                     for (i in 0 until 4) {
                         val pat = pattern[i]
-                        nodeList.add(Node(self, pat[0], pat[1], nodeSize))
+                        nodeList.add(Node(self, "Node ${nodeList.size + 1}", pat[0], pat[1], nodeSize))
                     }
                 }
 
