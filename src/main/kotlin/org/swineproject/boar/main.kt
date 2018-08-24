@@ -21,7 +21,17 @@ fun main(args: Array<String>) {
 
     shell.pack()
     shell.open()
+
+    var count = 60
+
     while (!shell.isDisposed) {
+        count -= 1
+
+        if (count == 0) {
+            count = 60
+            boarWidget.redraw()
+        }
+
         if (!display.readAndDispatch()) {
             display.sleep()
         }
