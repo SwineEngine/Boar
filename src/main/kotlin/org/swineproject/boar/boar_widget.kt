@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Display
 
 class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDER) {
     val self = this
+    lateinit var sideBar: SideBar
 
     val size = 480
     val collisionType = "polygon"
@@ -18,6 +19,7 @@ class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDE
     val nodeList = mutableListOf<Node>()
 
     var selectedNode: Node? = null
+    var editingNode: Node? = null
 
     var createNodes = true
 
@@ -49,6 +51,8 @@ class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDE
                 // event.gc.drawRectangle(destX, destY, size, size)
 
                 for (i in 0 until nodeList.size) {
+                    nodeList[i].draw(event)
+
                     if (i != nodeList.size - 1) {
                         val x1 = nodeList[i].x + halfSize
                         val y1 = nodeList[i].y + halfSize
@@ -65,14 +69,11 @@ class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDE
 
                         event.gc.drawLine(x1, y1, x2, y2)
                     }
-
-                    nodeList[i].draw(event)
                 }
             }
         })
 
-        // val layout = GridData(GridData.FILL_BOTH)
-        val layout = GridData()
+        val layout = GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1)
         layout.widthHint = size * 2
         layout.heightHint = size * 2
 

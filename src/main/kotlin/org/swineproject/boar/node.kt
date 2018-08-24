@@ -11,75 +11,77 @@ import org.eclipse.swt.widgets.Listener
 class Node(parent: BoarWidget, var x: Int, var y: Int, val size: Int) {
     var self = this
 
-    // var x = 0
-    // var y = 0
-    // var size = 0
-
     var colour = Display.getDefault().getSystemColor(SWT.COLOR_BLACK)!!
-    var selected = false
-    var dragging = false
+    // var selected = false
+    // var dragging = false
+    // var editing = false
+
+    // idle, selected, dragging, editing
+    var mode = "idle"
 
     init {
         parent.addListener(SWT.MouseMove, object : Listener {
             override fun handleEvent(event: Event) {
                 // event.x > x && event.x < x + size && event.y > y && event.y < y + size
-                if (!selected && !dragging) {
-                    colour = if (Util.isMouseIn(event.x, event.y, x, y, size, size)) {
+                when (mode) {
+                    "idle" -> colour = if (Util.isMouseIn(event.x, event.y, x, y, size, size)) {
                         Display.getDefault().getSystemColor(SWT.COLOR_GREEN)
                     }
                     else {
                         Display.getDefault().getSystemColor(SWT.COLOR_BLACK)
                     }
-                }
-                else if (selected && !dragging) {
-                    dragging = true
-                }
-                else if (dragging) {
-                    x = event.x - (size / 2)
-                    y = event.y - (size / 2)
+                    "selected" -> mode = "dragging"
+                    "dragging" -> {
+                        x = event.x - (size / 2)
+                        y = event.y - (size / 2)
+                    }
                 }
             }
         })
 
         parent.addMouseListener(object : MouseListener {
-            override fun mouseDoubleClick(e: MouseEvent?) {
-                return
+            override fun mouseDoubleClick(event: MouseEvent) {
+                if (Util.isMouseIn(event.x, event.y, x, y, size, size)) {
+                    parent.editingNode = self
+
+                    mode = "editing"
+                    parent.sideBar.showSideBar(mode == "editing")
+                }
             }
 
             override fun mouseDown(event: MouseEvent) {
                 if (Util.isMouseIn(event.x, event.y, x, y, size, size)) {
-                    selected = true
+                    mode = "selected"
                     parent.selectedNode = self
                 }
                 else {
-                    selected = false
-                    parent.selectedNode = null
+                    mode = "idle"
+                    // parent.selectedNode = null
                 }
             }
 
-            override fun mouseUp(e: MouseEvent?) {
-                if (dragging) {
-                    selected = false
-                    dragging = false
+            override fun mouseUp(event: MouseEvent) {
+                if (mode == "dragging") {
+                    mode = "idle"
                 }
             }
         })
     }
 
     fun draw(event: PaintEvent) {
-        // if (!dragging) {
-        //     this.x = x
-        //     this.y = y
-        //     this.size = size
-        // }
-
-        if (!selected) {
-            event.gc.background = colour
-            event.gc.foreground = colour
-        }
-        else {
-            event.gc.background = Display.getDefault().getSystemColor(SWT.COLOR_BLUE)
-            event.gc.foreground = Display.getDefault().getSystemColor(SWT.COLOR_BLUE)
+        when (mode) {
+            "idle" -> {
+                event.gc.background = colour
+                event.gc.foreground = colour
+            }
+            "dragging" -> {
+                event.gc.background = Display.getDefault().getSystemColor(SWT.COLOR_BLUE)
+                event.gc.foreground = Display.getDefault().getSystemColor(SWT.COLOR_BLUE)
+            }
+            "editing" -> {
+                event.gc.background = Display.getDefault().getSystemColor(SWT.COLOR_RED)
+                event.gc.foreground = Display.getDefault().getSystemColor(SWT.COLOR_RED)
+            }
         }
 
         event.gc.drawRectangle(this.x, this.y, size, size)

@@ -5,7 +5,6 @@ import org.eclipse.swt.layout.GridData
 import org.eclipse.swt.widgets.Display
 import org.eclipse.swt.widgets.Shell
 import org.eclipse.swt.layout.GridLayout
-import org.eclipse.swt.widgets.Button
 
 
 fun main(args: Array<String>) {
@@ -17,7 +16,11 @@ fun main(args: Array<String>) {
     shell.layout = layout
 
     val boarWidget = BoarWidget(display, shell)
-    // Button(shell, SWT.PUSH).text = "Button"
+
+    val sideBar = SideBar(shell)
+    sideBar.showSideBar(false)
+    sideBar.boarWidget = boarWidget
+    boarWidget.sideBar = sideBar
 
     shell.pack()
     shell.open()
@@ -29,6 +32,7 @@ fun main(args: Array<String>) {
         if (count == 0) {
             count = countMax
             boarWidget.redraw()
+            sideBar.update()
         }
         else {
             count -= 1
