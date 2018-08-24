@@ -1,0 +1,3 @@
+[submodule "src/main/resources/sprites"]
+	path = src/main/resources/sprites
+	url = https://github.com/SwineProject/sprites.git
