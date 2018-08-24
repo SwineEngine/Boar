@@ -42,8 +42,9 @@ class SideBar(parent: Composite) {
         // yField.isAccessible = true
 
         if (boarWidget.selectedNode != null) {
-            spinnerX.setText(boarWidget.selectedNode!!.x.toString())
-            spinnerY.setText(boarWidget.selectedNode!!.y.toString())
+            val center = Util.centerPosition(boarWidget.selectedNode!!.x, boarWidget.selectedNode!!.y, boarWidget.clientArea.width, boarWidget.clientArea.height)
+            spinnerX.setText(center[0].toString())
+            spinnerY.setText(center[1].toString())
         }
     }
 
