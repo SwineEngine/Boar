@@ -22,14 +22,16 @@ fun main(args: Array<String>) {
     shell.pack()
     shell.open()
 
-    var count = 60
+    val countMax = 24
+    var count = countMax
 
     while (!shell.isDisposed) {
-        count -= 1
-
         if (count == 0) {
-            count = 60
+            count = countMax
             boarWidget.redraw()
+        }
+        else {
+            count -= 1
         }
 
         if (!display.readAndDispatch()) {

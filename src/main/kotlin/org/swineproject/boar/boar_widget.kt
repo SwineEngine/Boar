@@ -9,56 +9,73 @@ import org.eclipse.swt.widgets.Canvas
 import org.eclipse.swt.widgets.Composite
 import org.eclipse.swt.widgets.Display
 
-class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.NONE) {
-    val collisionType = "box"
+class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDER) {
+    val self = this
+
+    val size = 480
+    val collisionType = "polygon"
 
     val nodeList = mutableListOf<Node>()
 
     var selectedNode: Node? = null
 
-    init {
-        when (collisionType) {
-            "box" -> {
-                for (i in 0..4) {
-                    nodeList.add(Node(this))
-                }
-            }
-        }
+    var createNodes = true
 
+    init {
         this.addPaintListener(object : PaintListener {
             override fun paintControl(event: PaintEvent) {
-                val size = 480
                 val destX = (clientArea.width / 2) - (size / 2)
                 val destY = (clientArea.height / 2) - (size / 2)
+
+                val nodeSize = 24
+                val halfSize = (nodeSize / 2)
+                val pattern = listOf(listOf(destX - halfSize, destY - halfSize), listOf(destX - halfSize + size, destY - halfSize),
+                        listOf(destX - halfSize + size, destY - halfSize + size), listOf(destX - halfSize, destY - halfSize + size))
+
+                if (createNodes) {
+                    createNodes = false
+
+                    for (i in 0 until 4) {
+                        val pat = pattern[i]
+                        nodeList.add(Node(self, pat[0], pat[1], nodeSize))
+                    }
+                }
 
                 val image = Image(display, javaClass.classLoader.getResource("sprites/pig/idle/pig_idle_0.png").path)
                 event.gc.drawImage(image, 0, 0, image.bounds.width, image.bounds.height, destX, destY, size, size)
                 image.dispose()
 
-                val nodeSize = 24
-
                 event.gc.background = display.getSystemColor(SWT.COLOR_BLACK)
-                event.gc.drawRectangle(destX, destY, size, size)
+                // event.gc.drawRectangle(destX, destY, size, size)
 
-                // Top Notch
-                // event.gc.fillRectangle(destX + ((size - (nodeSize / 2)) / 2), destY - (nodeSize / 2), nodeSize, nodeSize)
-                nodeList[0].draw(event, destX + ((size - (nodeSize / 2)) / 2), destY - (nodeSize / 2), nodeSize)
+                for (i in 0 until nodeList.size) {
+                    if (i != nodeList.size - 1) {
+                        val x1 = nodeList[i].x + halfSize
+                        val y1 = nodeList[i].y + halfSize
+                        val x2 = nodeList[i + 1].x + halfSize
+                        val y2 = nodeList[i + 1].y + halfSize
 
-                // Bottom Notch
-                // event.gc.fillRectangle(destX + ((size - (nodeSize / 2)) / 2), (destY + size) - (nodeSize / 2), nodeSize, nodeSize)
-                nodeList[1].draw(event, destX + ((size - (nodeSize / 2)) / 2), (destY + size) - (nodeSize / 2), nodeSize)
+                        event.gc.drawLine(x1, y1, x2, y2)
+                    }
+                    else {
+                        val x1 = nodeList[i].x + halfSize
+                        val y1 = nodeList[i].y + halfSize
+                        val x2 = nodeList[0].x + halfSize
+                        val y2 = nodeList[0].y + halfSize
 
-                // Left Notch
-                // event.gc.fillRectangle(destX - (nodeSize / 2), (destY + (size / 2)) - (nodeSize / 2), nodeSize, nodeSize)
-                nodeList[2].draw(event, destX - (nodeSize / 2), (destY + (size / 2)) - (nodeSize / 2), nodeSize)
+                        event.gc.drawLine(x1, y1, x2, y2)
+                    }
 
-                // Right Notch
-                // event.gc.fillRectangle((destX + size) - (nodeSize / 2), (destY + (size / 2)) - (nodeSize / 2), nodeSize, nodeSize)
-                nodeList[3].draw(event, (destX + size) - (nodeSize / 2), (destY + (size / 2)) - (nodeSize / 2), nodeSize)
+                    nodeList[i].draw(event)
+                }
             }
         })
 
-        val layout = GridData(GridData.FILL_BOTH)
+        // val layout = GridData(GridData.FILL_BOTH)
+        val layout = GridData()
+        layout.widthHint = size * 2
+        layout.heightHint = size * 2
+
         this.layoutData = layout
     }
 }
