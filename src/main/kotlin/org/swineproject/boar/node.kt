@@ -58,6 +58,8 @@ class Node(parent: BoarWidget, var x: Int, var y: Int, val size: Int) {
                     mode = "idle"
                     // parent.selectedNode = null
                 }
+
+                parent.setFocus()
             }
 
             override fun mouseUp(event: MouseEvent) {

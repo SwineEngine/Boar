@@ -1,18 +1,22 @@
 package org.swineproject.boar
 
 import org.eclipse.swt.SWT
+import org.eclipse.swt.events.ModifyEvent
+import org.eclipse.swt.events.ModifyListener
 import org.eclipse.swt.internal.win32.OS
 import org.eclipse.swt.internal.win32.TCHAR
 import org.eclipse.swt.layout.GridData
 import org.eclipse.swt.layout.GridLayout
 import org.eclipse.swt.widgets.*
 
-class SideBar(parent: Composite) {
-    lateinit var boarWidget: BoarWidget
+class SideBar(parent: Composite, val boarWidget: BoarWidget) {
+    // lateinit var boarWidget: BoarWidget
 
     private var group = Group(parent, SWT.NULL)
     private var spinnerX: Spinner
     private var spinnerY: Spinner
+
+    private var nodePosition: Array<Int>? = null
 
     init {
         val groupLayout = GridLayout()
@@ -23,10 +27,32 @@ class SideBar(parent: Composite) {
         Label(group, SWT.NONE).text = "Position:"
         Label(group, SWT.NONE).text = "X"
         spinnerX = Spinner(group, SWT.NONE)
-        spinnerX.digits = 2
+        spinnerX.digits = 0
+        spinnerX.minimum = -boarWidget.size
+        spinnerX.maximum = boarWidget.size
         Label(group, SWT.NONE).text = "Y"
         spinnerY = Spinner(group, SWT.NONE)
-        spinnerY.digits = 2
+        spinnerY.digits = 0
+
+        spinnerX.addModifyListener(object : ModifyListener {
+            override fun modifyText(event: ModifyEvent) {
+                if (boarWidget.selectedNode != null) {
+                    if (spinnerX.text != (boarWidget.selectedNode!!.x - (boarWidget.clientArea.width / 2)).toString()) {
+                        boarWidget.selectedNode!!.x = spinnerX.text.toInt() + (boarWidget.clientArea.width / 2)
+                    }
+                }
+            }
+        })
+
+        spinnerY.addModifyListener(object : ModifyListener {
+            override fun modifyText(event: ModifyEvent) {
+                if (boarWidget.selectedNode != null) {
+                    if (spinnerY.text != (boarWidget.selectedNode!!.y - (boarWidget.clientArea.height / 2)).toString()) {
+                        boarWidget.selectedNode!!.y = spinnerY.text.toInt() + (boarWidget.clientArea.height / 2)
+                    }
+                }
+            }
+        })
     }
 
     fun showSideBar(show: Boolean) {
@@ -42,9 +68,15 @@ class SideBar(parent: Composite) {
         // yField.isAccessible = true
 
         if (boarWidget.selectedNode != null) {
-            val center = Util.centerPosition(boarWidget.selectedNode!!.x, boarWidget.selectedNode!!.y, boarWidget.clientArea.width, boarWidget.clientArea.height)
-            spinnerX.setText(center[0].toString())
-            spinnerY.setText(center[1].toString())
+            nodePosition = Util.centerPosition(boarWidget.selectedNode!!.x, boarWidget.selectedNode!!.y, boarWidget.clientArea.width, boarWidget.clientArea.height)
+
+            if (!spinnerX.isFocusControl) {
+                spinnerX.setText(nodePosition!![0].toString())
+            }
+
+            if (!spinnerY.isFocusControl) {
+                spinnerY.setText(nodePosition!![1].toString())
+            }
         }
     }
 
