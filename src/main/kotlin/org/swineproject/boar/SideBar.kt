@@ -28,9 +28,11 @@ class SideBar(parent: Composite, val boarWidget: BoarWidget) {
         Label(group, SWT.NONE).text = "Selected:"
         nameLabel = Label(group, SWT.NONE)
         nameLabel.text = "None"
-        val nameLayout = GridData(GridData.FILL_HORIZONTAL)
-        nameLayout.horizontalSpan = 4
-        nameLabel.layoutData = nameLayout
+        val nameData = GridData(GridData.FILL_HORIZONTAL)
+        nameData.horizontalSpan = 4
+        nameLabel.layoutData = nameData
+
+        val spinnerData = GridData(GridData.FILL_HORIZONTAL)
 
         Label(group, SWT.NONE).text = "Position:"
         Label(group, SWT.NONE).text = "X"
@@ -38,16 +40,18 @@ class SideBar(parent: Composite, val boarWidget: BoarWidget) {
         spinnerX.digits = 0
         spinnerX.minimum = -boarWidget.size
         spinnerX.maximum = boarWidget.size
+        spinnerX.layoutData = spinnerData
         Label(group, SWT.NONE).text = "Y"
         spinnerY = Spinner(group, SWT.NONE)
         spinnerY.digits = 0
+        spinnerY.minimum = -boarWidget.size
+        spinnerY.maximum = boarWidget.size
+        spinnerY.layoutData = spinnerData
 
         spinnerX.addModifyListener(object : ModifyListener {
             override fun modifyText(event: ModifyEvent) {
                 if (boarWidget.selectedNode != null) {
-                    if (spinnerX.text != (boarWidget.selectedNode!!.x - (boarWidget.clientArea.width / 2)).toString()) {
-                        boarWidget.selectedNode!!.x = spinnerX.text.toInt() + (boarWidget.clientArea.width / 2)
-                    }
+                    boarWidget.selectedNode!!.x = spinnerX.text.toInt() + (boarWidget.clientArea.width / 2)
                 }
             }
         })
@@ -55,9 +59,7 @@ class SideBar(parent: Composite, val boarWidget: BoarWidget) {
         spinnerY.addModifyListener(object : ModifyListener {
             override fun modifyText(event: ModifyEvent) {
                 if (boarWidget.selectedNode != null) {
-                    if (spinnerY.text != (boarWidget.selectedNode!!.y - (boarWidget.clientArea.height / 2)).toString()) {
-                        boarWidget.selectedNode!!.y = spinnerY.text.toInt() + (boarWidget.clientArea.height / 2)
-                    }
+                    boarWidget.selectedNode!!.y = spinnerY.text.toInt() + (boarWidget.clientArea.height / 2)
                 }
             }
         })
