@@ -6,13 +6,8 @@ import org.eclipse.swt.events.MouseListener
 import org.eclipse.swt.events.PaintEvent
 import org.eclipse.swt.events.PaintListener
 import org.eclipse.swt.graphics.Image
-import org.eclipse.swt.graphics.Point
 import org.eclipse.swt.layout.GridData
-import org.eclipse.swt.widgets.Canvas
-import org.eclipse.swt.widgets.Composite
-import org.eclipse.swt.widgets.Display
-import kotlin.math.max
-import kotlin.math.min
+import org.eclipse.swt.widgets.*
 
 class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDER) {
     val self = this
@@ -33,6 +28,8 @@ class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDE
     var createNodes = true
 
     init {
+        this.background = Display.getDefault().getSystemColor(SWT.COLOR_WHITE)
+
         this.addPaintListener(object : PaintListener {
             override fun paintControl(event: PaintEvent) {
                 val destX = (clientArea.width / 2) - (size / 2)
@@ -112,11 +109,7 @@ class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDE
                     }
                 }
                 dupeList.remove(secondNode!!)
-
-                // event.gc.drawLine(mousePosition.x, mousePosition.y, firstNode.x, firstNode.y)
-                // event.gc.drawLine(mousePosition.x, mousePosition.y, secondNode.x, secondNode.y)
-
-                // nodeList.add(nodeList.indexOf(firstNode!!), Node(self, "Node ${nodeList.size + 1}", max(firstNode!!.x, secondNode!!.x) - min(firstNode!!.x, secondNode!!.x), max(firstNode!!.y, secondNode!!.y) - min(firstNode!!.y, secondNode!!.y), nodeSize))
+                
                 nodeList.add(nodeList.indexOf(firstNode!!), Node(self, "Node ${nodeList.size + 1}", mousePosition.x, mousePosition.y, nodeSize))
             }
 
@@ -126,6 +119,16 @@ class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDE
 
             override fun mouseUp(event: MouseEvent?) {
                 return
+            }
+        })
+
+        this.addListener(SWT.Dispose, object: Listener {
+            override fun handleEvent(event: Event?) {
+                if (image != null) {
+                    if (!image!!.isDisposed) {
+                        image!!.dispose()
+                    }
+                }
             }
         })
 

@@ -12,9 +12,6 @@ class Node(parent: BoarWidget, val name: String, var x: Int, var y: Int, val siz
     var self = this
 
     var colour = Display.getDefault().getSystemColor(SWT.COLOR_BLACK)!!
-    // var selected = false
-    // var dragging = false
-    // var editing = false
 
     // idle, selected, dragging, editing
     var mode = "idle"

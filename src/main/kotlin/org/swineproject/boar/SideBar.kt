@@ -13,8 +13,6 @@ import org.eclipse.swt.layout.GridLayout
 import org.eclipse.swt.widgets.*
 
 class SideBar(parent: Composite, val boarWidget: BoarWidget) {
-    // lateinit var boarWidget: BoarWidget
-
     var nodeGroup = Group(parent, SWT.NULL)
     private var spinnerX: Spinner
     private var spinnerY: Spinner
