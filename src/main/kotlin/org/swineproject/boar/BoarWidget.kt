@@ -6,6 +6,7 @@ import org.eclipse.swt.events.MouseListener
 import org.eclipse.swt.events.PaintEvent
 import org.eclipse.swt.events.PaintListener
 import org.eclipse.swt.graphics.Image
+import org.eclipse.swt.graphics.Point
 import org.eclipse.swt.layout.GridData
 import org.eclipse.swt.widgets.Canvas
 import org.eclipse.swt.widgets.Composite
@@ -25,6 +26,9 @@ class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDE
 
     var selectedNode: Node? = null
     var editingNode: Node? = null
+
+    var firstNode: Node? = null
+    var secondNode: Node? = null
 
     var createNodes = true
 
@@ -74,6 +78,52 @@ class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDE
                         event.gc.drawLine(x1, y1, x2, y2)
                     }
                 }
+            }
+        })
+
+        this.addMouseListener(object : MouseListener {
+            override fun mouseDoubleClick(event: MouseEvent) {
+                val mousePosition = Display.getCurrent().focusControl.toControl(Display.getCurrent().cursorLocation)
+
+                val dupeList = nodeList.toMutableList()
+
+                val width = (self.clientArea.width / nodeList.size) * 1.5
+                val height = (self.clientArea.height / nodeList.size) * 1.5
+
+                firstNode = nodeList[0]
+                secondNode = nodeList[0]
+
+                for (i in nodeList) {
+                    if (i in dupeList) {
+                        if (-width < i.x - mousePosition.x && i.x - mousePosition.x < width && -height < i.y - mousePosition.y && i.y - mousePosition.y < height) {
+                            firstNode = i
+                        }
+                    }
+                }
+                dupeList.remove(firstNode!!)
+
+                for (i in nodeList) {
+                    if (i in dupeList) {
+                        if (-width < i.x - mousePosition.x && i.x - mousePosition.x < width && -height < i.y - mousePosition.y && i.y - mousePosition.y < height) {
+                            secondNode = i
+                        }
+                    }
+                }
+                dupeList.remove(secondNode!!)
+
+                // event.gc.drawLine(mousePosition.x, mousePosition.y, firstNode.x, firstNode.y)
+                // event.gc.drawLine(mousePosition.x, mousePosition.y, secondNode.x, secondNode.y)
+
+                // nodeList.add(nodeList.indexOf(firstNode!!), Node(self, "Node ${nodeList.size + 1}", max(firstNode!!.x, secondNode!!.x) - min(firstNode!!.x, secondNode!!.x), max(firstNode!!.y, secondNode!!.y) - min(firstNode!!.y, secondNode!!.y), nodeSize))
+                nodeList.add(nodeList.indexOf(firstNode!!), Node(self, "Node ${nodeList.size + 1}", mousePosition.x, mousePosition.y, nodeSize))
+            }
+
+            override fun mouseDown(event: MouseEvent?) {
+                return
+            }
+
+            override fun mouseUp(event: MouseEvent?) {
+                return
             }
         })
 
