@@ -1,7 +1,5 @@
 package org.swineproject.boar
 
-import org.eclipse.swt.SWT
-import org.eclipse.swt.layout.GridData
 import org.eclipse.swt.widgets.Display
 import org.eclipse.swt.widgets.Shell
 import org.eclipse.swt.layout.GridLayout
@@ -24,19 +22,25 @@ fun main(args: Array<String>) {
     shell.pack()
     shell.open()
 
-    val countMax = 24
-    var count = countMax
+    val delay = 24
+
+    val timer = object : Runnable {
+        override fun run() {
+            if (!boarWidget.isDisposed) {
+                boarWidget.redraw()
+            }
+
+            if (!sideBar.group.isDisposed) {
+                sideBar.update()
+            }
+
+            display.timerExec(delay, this)
+        }
+    }
+
+    display.timerExec(delay, timer)
 
     while (!shell.isDisposed) {
-        if (count == 0) {
-            count = countMax
-            boarWidget.redraw()
-            sideBar.update()
-        }
-        else {
-            count -= 1
-        }
-
         if (!display.readAndDispatch()) {
             display.sleep()
         }

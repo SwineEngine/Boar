@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.*
 class SideBar(parent: Composite, val boarWidget: BoarWidget) {
     // lateinit var boarWidget: BoarWidget
 
-    private var group = Group(parent, SWT.NULL)
+    var group = Group(parent, SWT.NULL)
     private var spinnerX: Spinner
     private var spinnerY: Spinner
     private var nameLabel: Label
