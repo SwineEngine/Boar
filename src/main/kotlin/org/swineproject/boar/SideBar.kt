@@ -5,6 +5,7 @@ import org.eclipse.swt.events.ModifyEvent
 import org.eclipse.swt.events.ModifyListener
 import org.eclipse.swt.events.SelectionEvent
 import org.eclipse.swt.events.SelectionListener
+import org.eclipse.swt.graphics.Image
 import org.eclipse.swt.internal.win32.OS
 import org.eclipse.swt.internal.win32.TCHAR
 import org.eclipse.swt.layout.GridData
@@ -87,7 +88,26 @@ class SideBar(parent: Composite, val boarWidget: BoarWidget) {
         projectGroupData.verticalSpan = 1
         projectGroup.layoutData = projectGroupData
 
-        // Button(group, SWT.PUSH).text = "Open Image"
+        val buttonImage = Button(projectGroup, SWT.PUSH)
+        buttonImage.text = "Open Image"
+        buttonImage.layoutData = fillButton
+
+        buttonImage.addSelectionListener(object : SelectionListener {
+            override fun widgetSelected(event: SelectionEvent) {
+                val dialog = FileDialog(parent.shell, SWT.OPEN)
+                dialog.filterExtensions = arrayOf("*.png", "*.jpg; *.jpeg")
+                dialog.filterNames = arrayOf("PNG (${dialog.filterExtensions[0]})", "JPEG (${dialog.filterExtensions[1]})")
+                val result = dialog.open()
+
+                if (result != null) {
+                    boarWidget.image = Image(boarWidget.display, result)
+                }
+            }
+
+            override fun widgetDefaultSelected(event: SelectionEvent) {
+                return
+            }
+        })
 
         Label(projectGroup, SWT.NONE).text = "Ratio:"
         Label(projectGroup, SWT.NONE).text = "Width"
@@ -107,11 +127,11 @@ class SideBar(parent: Composite, val boarWidget: BoarWidget) {
         spinnerScale.minimum = 1
         spinnerScale.layoutData = scaleData
 
-        val collisionButton = Button(projectGroup, SWT.NONE)
-        collisionButton.text = "Export Collision Box"
-        collisionButton.layoutData = fillButton
+        val buttonCollision = Button(projectGroup, SWT.NONE)
+        buttonCollision.text = "Export Collision Box"
+        buttonCollision.layoutData = fillButton
 
-        collisionButton.addSelectionListener(object : SelectionListener {
+        buttonCollision.addSelectionListener(object : SelectionListener {
             override fun widgetSelected(event: SelectionEvent) {
                 println(Util.exportVertices(boarWidget.nodeList, boarWidget.clientArea.width, boarWidget.clientArea.height, spinnerWidth.text.toInt(), spinnerHeight.text.toInt(), spinnerScale.text.toFloat()).toList())
             }

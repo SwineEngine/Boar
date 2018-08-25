@@ -19,7 +19,7 @@ class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDE
     lateinit var sideBar: SideBar
 
     val size = 480
-    val collisionType = "polygon"
+    var image: Image? = null
 
     val nodeSize = 24
     val nodeList = mutableListOf<Node>()
@@ -51,9 +51,11 @@ class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDE
                     }
                 }
 
-                val image = Image(display, javaClass.classLoader.getResource("sprites/pig/idle/pig_idle_0.png").path)
-                event.gc.drawImage(image, 0, 0, image.bounds.width, image.bounds.height, destX, destY, size, size)
-                image.dispose()
+                // val image = Image(display, javaClass.classLoader.getResource("sprites/pig/idle/pig_idle_0.png").path)
+                if (image != null) {
+                    event.gc.drawImage(image, 0, 0, image!!.bounds.width, image!!.bounds.height, destX, destY, size, size)
+                    // image!!.dispose()
+                }
 
                 event.gc.background = display.getSystemColor(SWT.COLOR_BLACK)
                 // event.gc.drawRectangle(destX, destY, size, size)
