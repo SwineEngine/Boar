@@ -35,7 +35,7 @@ fun main(args: Array<String>) {
                 boarWidget.redraw()
             }
 
-            if (!sideBar.group.isDisposed) {
+            if (!sideBar.nodeGroup.isDisposed) {
                 sideBar.update()
             }
 

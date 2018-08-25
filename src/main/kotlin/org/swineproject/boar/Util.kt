@@ -13,14 +13,14 @@ object Util {
         return arrayOf(x - (size / 2) + (width / 2), y - (size / 2) + (height / 2))
     }
 
-    fun exportVertices(nodeList: List<Node>, width: Int, height: Int): Array<Pair<Float, Float>> {
+    fun exportVertices(nodeList: List<Node>, width: Int, height: Int, imageWidth: Int, imageHeight: Int, imageScale: Float): Array<Pair<Float, Float>> {
         val vertices: MutableList<Pair<Float, Float>> = mutableListOf()
 
         for (i in nodeList) {
             val nodeSize = i.size
             val position = Util.centerPosition(i.x, i.y, i.size, width, height)
 
-            vertices.add(Pair((((position[0] + nodeSize) / (width / 2f)) * 16) * 6f, -(((position[1] + nodeSize) / (height / 2f)) * 16) * 6f))
+            vertices.add(Pair((((position[0] + nodeSize) / (width / 2f)) * imageWidth) * imageScale, -(((position[1] + nodeSize) / (height / 2f)) * imageHeight) * imageScale))
         }
 
         return vertices.toTypedArray()

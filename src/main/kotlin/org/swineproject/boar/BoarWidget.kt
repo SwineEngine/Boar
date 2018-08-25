@@ -1,6 +1,8 @@
 package org.swineproject.boar
 
 import org.eclipse.swt.SWT
+import org.eclipse.swt.events.MouseEvent
+import org.eclipse.swt.events.MouseListener
 import org.eclipse.swt.events.PaintEvent
 import org.eclipse.swt.events.PaintListener
 import org.eclipse.swt.graphics.Image
@@ -8,6 +10,8 @@ import org.eclipse.swt.layout.GridData
 import org.eclipse.swt.widgets.Canvas
 import org.eclipse.swt.widgets.Composite
 import org.eclipse.swt.widgets.Display
+import kotlin.math.max
+import kotlin.math.min
 
 class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDER) {
     val self = this
@@ -16,6 +20,7 @@ class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDE
     val size = 480
     val collisionType = "polygon"
 
+    val nodeSize = 24
     val nodeList = mutableListOf<Node>()
 
     var selectedNode: Node? = null
@@ -29,7 +34,6 @@ class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDE
                 val destX = (clientArea.width / 2) - (size / 2)
                 val destY = (clientArea.height / 2) - (size / 2)
 
-                val nodeSize = 24
                 val halfSize = (nodeSize / 2)
                 val pattern = listOf(listOf(destX - halfSize, destY - halfSize), listOf(destX - halfSize + size, destY - halfSize),
                         listOf(destX - halfSize + size, destY - halfSize + size), listOf(destX - halfSize, destY - halfSize + size))
@@ -76,6 +80,7 @@ class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDE
         val layout = GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1)
         layout.widthHint = size * 2
         layout.heightHint = size * 2
+        layout.verticalSpan = 2
 
         this.layoutData = layout
     }
