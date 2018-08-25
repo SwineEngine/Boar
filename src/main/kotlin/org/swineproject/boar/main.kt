@@ -8,6 +8,7 @@ import org.eclipse.swt.layout.GridLayout
 fun main(args: Array<String>) {
     val display = Display()
     val shell = Shell(display)
+    shell.text = "Boar"
 
     val layout = GridLayout()
     layout.numColumns = 2

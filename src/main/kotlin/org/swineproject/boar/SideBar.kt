@@ -22,10 +22,13 @@ class SideBar(parent: Composite, val boarWidget: BoarWidget) {
     private var nodePosition: Array<Int>? = null
 
     var projectGroup = Group(parent, SWT.NULL)
-    private var textWidth: Text
-    private var textHeight: Text
+    private var spinnerWidth: Spinner
+    private var spinnerHeight: Spinner
+    private var spinnerScale: Spinner
 
     init {
+        val spinnerData = GridData(GridData.FILL_HORIZONTAL)
+
         // Node Group
         
         val nodeGroupLayout = GridLayout()
@@ -41,8 +44,6 @@ class SideBar(parent: Composite, val boarWidget: BoarWidget) {
         val nameData = GridData(GridData.FILL_HORIZONTAL)
         nameData.horizontalSpan = 4
         nameLabel.layoutData = nameData
-
-        val spinnerData = GridData(GridData.FILL_HORIZONTAL)
 
         Label(nodeGroup, SWT.NONE).text = "Position:"
         Label(nodeGroup, SWT.NONE).text = "X"
@@ -90,15 +91,21 @@ class SideBar(parent: Composite, val boarWidget: BoarWidget) {
 
         Label(projectGroup, SWT.NONE).text = "Ratio:"
         Label(projectGroup, SWT.NONE).text = "Width"
-        textWidth = Text(projectGroup, SWT.BORDER or SWT.SINGLE)
+        spinnerWidth = Spinner(projectGroup, SWT.BORDER)
+        spinnerWidth.minimum = 1
+        spinnerWidth.layoutData = spinnerData
         Label(projectGroup, SWT.NONE).text = "Height"
-        textHeight = Text(projectGroup, SWT.BORDER or SWT.SINGLE)
+        spinnerHeight = Spinner(projectGroup, SWT.BORDER)
+        spinnerHeight.minimum = 1
+        spinnerHeight.layoutData = spinnerData
 
         Label(projectGroup, SWT.NONE).text = "Scale:"
         val scaleData = GridData(GridData.FILL_HORIZONTAL)
         scaleData.horizontalSpan = 4
-        val textScale = Text(projectGroup, SWT.BORDER or SWT.SINGLE)
-        textScale.layoutData = scaleData
+
+        spinnerScale = Spinner(projectGroup, SWT.BORDER)
+        spinnerScale.minimum = 1
+        spinnerScale.layoutData = scaleData
 
         val collisionButton = Button(projectGroup, SWT.NONE)
         collisionButton.text = "Export Collision Box"
@@ -106,7 +113,7 @@ class SideBar(parent: Composite, val boarWidget: BoarWidget) {
 
         collisionButton.addSelectionListener(object : SelectionListener {
             override fun widgetSelected(event: SelectionEvent) {
-                println(Util.exportVertices(boarWidget.nodeList, boarWidget.clientArea.width, boarWidget.clientArea.height, textWidth.text.toInt(), textHeight.text.toInt(), textScale.text.toFloat()).toList())
+                println(Util.exportVertices(boarWidget.nodeList, boarWidget.clientArea.width, boarWidget.clientArea.height, spinnerWidth.text.toInt(), spinnerHeight.text.toInt(), spinnerScale.text.toFloat()).toList())
             }
 
             override fun widgetDefaultSelected(event: SelectionEvent) {
