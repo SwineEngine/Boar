@@ -69,7 +69,7 @@ class SideBar(parent: Composite, val boarWidget: BoarWidget) {
         if (boarWidget.selectedNode != null) {
             nameLabel.text = boarWidget.selectedNode!!.name
 
-            nodePosition = Util.centerPosition(boarWidget.selectedNode!!.x, boarWidget.selectedNode!!.y, boarWidget.clientArea.width, boarWidget.clientArea.height)
+            nodePosition = Util.centerPosition(boarWidget.selectedNode!!.x, boarWidget.selectedNode!!.y, 0, boarWidget.clientArea.width, boarWidget.clientArea.height)
 
             if (!spinnerX.isFocusControl) {
                 spinnerX.setText(nodePosition!![0].toString())

@@ -13,11 +13,16 @@ fun main(args: Array<String>) {
     layout.numColumns = 2
     shell.layout = layout
 
+    val hotbar = Hotbar(shell)
+
     val boarWidget = BoarWidget(display, shell)
+    hotbar.boarWidget = boarWidget
 
     val sideBar = SideBar(shell, boarWidget)
     // sideBar.boarWidget = boarWidget
     boarWidget.sideBar = sideBar
+
+    boarWidget.setFocus()
 
     shell.pack()
     shell.open()
