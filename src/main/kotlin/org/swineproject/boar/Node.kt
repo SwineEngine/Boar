@@ -41,30 +41,29 @@ class Node(parent: BoarWidget, val name: String, var x: Int, var y: Int, val siz
 
         parent.addMouseListener(object : MouseListener {
             override fun mouseDoubleClick(event: MouseEvent) {
-                if (Util.isMouseIn(event.x, event.y, x, y, size, size)) {
-                    parent.editingNode = self
-
-                    mode = "editing"
-                }
+                return
             }
 
             override fun mouseDown(event: MouseEvent) {
-                if (Util.isMouseIn(event.x, event.y, x, y, size, size)) {
-                    mode = "selected"
-                    parent.selectedNode = self
-                }
-                else {
-                    mode = "idle"
-                    // parent.selectedNode = null
+                when (event.button) {
+                    1 -> {
+                        if (Util.isMouseIn(event.x, event.y, x, y, size, size)) {
+                            mode = "selected"
+                            parent.selectedNode = self
+                        }
+                    }
+                    3 -> {
+                        if (Util.isMouseIn(event.x, event.y, x, y, size, size)) {
+                            parent.nodeList.remove(self)
+                        }
+                    }
                 }
 
                 parent.setFocus()
             }
 
             override fun mouseUp(event: MouseEvent) {
-                if (mode == "dragging") {
-                    mode = "idle"
-                }
+                mode = "idle"
             }
         })
     }
@@ -78,10 +77,6 @@ class Node(parent: BoarWidget, val name: String, var x: Int, var y: Int, val siz
             "dragging" -> {
                 event.gc.background = Display.getDefault().getSystemColor(SWT.COLOR_BLUE)
                 event.gc.foreground = Display.getDefault().getSystemColor(SWT.COLOR_BLUE)
-            }
-            "editing" -> {
-                event.gc.background = Display.getDefault().getSystemColor(SWT.COLOR_RED)
-                event.gc.foreground = Display.getDefault().getSystemColor(SWT.COLOR_RED)
             }
         }
 

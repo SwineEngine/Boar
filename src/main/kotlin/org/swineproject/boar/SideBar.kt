@@ -95,8 +95,8 @@ class SideBar(parent: Composite, val boarWidget: BoarWidget) {
         buttonImage.addSelectionListener(object : SelectionListener {
             override fun widgetSelected(event: SelectionEvent) {
                 val dialog = FileDialog(parent.shell, SWT.OPEN)
-                dialog.filterExtensions = arrayOf("*.png", "*.jpg; *.jpeg")
-                dialog.filterNames = arrayOf("PNG (${dialog.filterExtensions[0]})", "JPEG (${dialog.filterExtensions[1]})")
+                dialog.filterExtensions = arrayOf("*.png", "*.jpg;*.jpeg")
+                dialog.filterNames = arrayOf("PNG (${dialog.filterExtensions[0]})", "JPEG (${dialog.filterExtensions[1].split(";").joinToString("; ")})")
                 val result = dialog.open()
 
                 if (result != null) {

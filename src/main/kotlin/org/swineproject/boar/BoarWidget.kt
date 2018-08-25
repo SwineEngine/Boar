@@ -18,10 +18,10 @@ class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDE
     val self = this
     lateinit var sideBar: SideBar
 
-    val size = 480
+    val size = 480 / 2
     var image: Image? = null
 
-    val nodeSize = 24
+    val nodeSize = 24 / 2
     val nodeList = mutableListOf<Node>()
 
     var selectedNode: Node? = null
