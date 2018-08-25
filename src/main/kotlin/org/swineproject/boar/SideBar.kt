@@ -86,6 +86,8 @@ class SideBar(parent: Composite, val boarWidget: BoarWidget) {
         projectGroupData.verticalSpan = 1
         projectGroup.layoutData = projectGroupData
 
+        // Button(group, SWT.PUSH).text = "Open Image"
+
         Label(projectGroup, SWT.NONE).text = "Ratio:"
         Label(projectGroup, SWT.NONE).text = "Width"
         textWidth = Text(projectGroup, SWT.BORDER or SWT.SINGLE)
@@ -97,6 +99,20 @@ class SideBar(parent: Composite, val boarWidget: BoarWidget) {
         scaleData.horizontalSpan = 4
         val textScale = Text(projectGroup, SWT.BORDER or SWT.SINGLE)
         textScale.layoutData = scaleData
+
+        val collisionButton = Button(projectGroup, SWT.NONE)
+        collisionButton.text = "Export Collision Box"
+        collisionButton.layoutData = fillButton
+
+        collisionButton.addSelectionListener(object : SelectionListener {
+            override fun widgetSelected(event: SelectionEvent) {
+                println(Util.exportVertices(boarWidget.nodeList, boarWidget.clientArea.width, boarWidget.clientArea.height, textWidth.text.toInt(), textHeight.text.toInt(), textScale.text.toFloat()).toList())
+            }
+
+            override fun widgetDefaultSelected(event: SelectionEvent) {
+                return
+            }
+        })
     }
 
     fun update() {
