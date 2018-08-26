@@ -4,13 +4,18 @@ import org.eclipse.swt.SWT
 import org.eclipse.swt.events.MouseEvent
 import org.eclipse.swt.events.MouseListener
 import org.eclipse.swt.events.PaintEvent
+import org.eclipse.swt.graphics.Cursor
 import org.eclipse.swt.widgets.Display
 import org.eclipse.swt.widgets.Event
 import org.eclipse.swt.widgets.Listener
 
 
-class Node(parent: BoarWidget, val name: String, var x: Int, var y: Int, val size: Int) {
+class Node(val parent: BoarWidget, val name: String, var x: Int, var y: Int, val size: Int) {
     var self = this
+
+    val cursorArrow = Cursor(parent.display, SWT.CURSOR_ARROW)
+    val cursorHand = Cursor(parent.display, SWT.CURSOR_HAND)
+    val cursorMove = Cursor(parent.display, SWT.CURSOR_SIZEALL)
 
     var colour = Display.getDefault().getSystemColor(SWT.COLOR_BLACK)!!
 
@@ -22,13 +27,20 @@ class Node(parent: BoarWidget, val name: String, var x: Int, var y: Int, val siz
             override fun handleEvent(event: Event) {
                 // event.x > x && event.x < x + size && event.y > y && event.y < y + size
                 when (mode) {
-                    "idle" -> colour = if (Util.isMouseIn(event.x, event.y, x, y, size, size)) {
-                        Display.getDefault().getSystemColor(SWT.COLOR_GREEN)
+                    "idle" -> {
+                        if (Util.isMouseIn(event.x, event.y, x, y, size, size)) {
+                            colour = Display.getDefault().getSystemColor(SWT.COLOR_GREEN)
+
+                            // parent.cursor = cursorHand
+                        }
+                        else {
+                            colour = Display.getDefault().getSystemColor(SWT.COLOR_BLACK)
+
+                            // if (parent.cursor != cursorMove) {
+                            //     parent.cursor = cursorArrow
+                            // }
+                        }
                     }
-                    else {
-                        Display.getDefault().getSystemColor(SWT.COLOR_BLACK)
-                    }
-                    "selected" -> mode = "dragging"
                     "dragging" -> {
                         x = event.x - (size / 2)
                         y = event.y - (size / 2)
@@ -46,8 +58,10 @@ class Node(parent: BoarWidget, val name: String, var x: Int, var y: Int, val siz
                 when (event.button) {
                     1 -> {
                         if (Util.isMouseIn(event.x, event.y, x, y, size, size)) {
-                            mode = "selected"
+                            mode = "dragging"
                             parent.selectedNode = self
+
+                            parent.cursor = cursorMove
                         }
                     }
                     3 -> {
@@ -62,6 +76,28 @@ class Node(parent: BoarWidget, val name: String, var x: Int, var y: Int, val siz
 
             override fun mouseUp(event: MouseEvent) {
                 mode = "idle"
+
+                parent.cursor = cursorArrow
+            }
+        })
+
+        this.parent.addListener(SWT.Dispose, object : Listener {
+            override fun handleEvent(event: Event?) {
+                if (!cursorArrow.isDisposed) {
+                    cursorArrow.dispose()
+                }
+
+                if (!cursorHand.isDisposed) {
+                    cursorHand.dispose()
+                }
+
+                if (!cursorMove.isDisposed) {
+                    cursorMove.dispose()
+                }
+
+                if (!colour.isDisposed) {
+                    colour.dispose()
+                }
             }
         })
     }
