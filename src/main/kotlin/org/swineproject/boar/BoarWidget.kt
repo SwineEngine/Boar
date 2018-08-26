@@ -1,6 +1,7 @@
 package org.swineproject.boar
 
 import org.eclipse.swt.SWT
+import org.eclipse.swt.dnd.*
 import org.eclipse.swt.events.MouseEvent
 import org.eclipse.swt.events.MouseListener
 import org.eclipse.swt.events.PaintEvent
@@ -8,6 +9,7 @@ import org.eclipse.swt.events.PaintListener
 import org.eclipse.swt.graphics.Image
 import org.eclipse.swt.layout.GridData
 import org.eclipse.swt.widgets.*
+
 
 class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDER) {
     val self = this
@@ -109,7 +111,7 @@ class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDE
                     }
                 }
                 dupeList.remove(secondNode!!)
-                
+
                 nodeList.add(nodeList.indexOf(firstNode!!), Node(self, "Node ${nodeList.size + 1}", mousePosition.x, mousePosition.y, nodeSize))
             }
 
@@ -122,13 +124,63 @@ class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDE
             }
         })
 
-        this.addListener(SWT.Dispose, object: Listener {
+        this.addListener(SWT.Dispose, object : Listener {
             override fun handleEvent(event: Event?) {
                 if (image != null) {
                     if (!image!!.isDisposed) {
                         image!!.dispose()
                     }
                 }
+            }
+        })
+
+        val dropTarget = DropTarget(this, DND.DROP_COPY or DND.DROP_DEFAULT)
+        val fileTransfer = FileTransfer.getInstance()
+        dropTarget.setTransfer(fileTransfer)
+
+        dropTarget.addDropListener(object : DropTargetListener {
+            override fun dragLeave(event: DropTargetEvent) {
+            }
+
+            override fun drop(event: DropTargetEvent) {
+                if (fileTransfer.isSupportedType(event.currentDataType)) {
+                    val fileNames = event.data as Array<*>
+
+                    for (name in fileNames) {
+                        image = Image(self.display, name.toString())
+                    }
+                }
+            }
+
+            override fun dropAccept(event: DropTargetEvent) {
+            }
+
+            override fun dragOver(event: DropTargetEvent) {
+            }
+
+            override fun dragEnter(event: DropTargetEvent) {
+                if (fileTransfer.isSupportedType(event.currentDataType)) {
+                    if (event.detail != DND.DROP_COPY) {
+                        event.detail = DND.DROP_COPY
+
+                        val files = (fileTransfer.nativeToJava(event.currentDataType) as Array<String>).toList()
+
+                        if (files.size != 1) {
+                            event.detail = DND.DROP_NONE
+                        }
+                        else {
+                            for (i in files) {
+                                if (i.split(".")[1] !in listOf("png", "jpg", "jpeg")) {
+                                    event.detail = DND.DROP_NONE
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            override fun dragOperationChanged(event: DropTargetEvent?) {
+                return
             }
         })
 

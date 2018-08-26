@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Display
 import org.eclipse.swt.widgets.Event
 import org.eclipse.swt.widgets.Listener
 
+
 class Node(parent: BoarWidget, val name: String, var x: Int, var y: Int, val size: Int) {
     var self = this
 
