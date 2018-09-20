@@ -11,12 +11,18 @@ import org.eclipse.swt.layout.GridData
 import org.eclipse.swt.widgets.*
 
 
-class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDER) {
+class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDER or SWT.H_SCROLL or SWT.V_SCROLL) {
     val self = this
     lateinit var sideBar: SideBar
 
-    val size = 480 / 2
+    val layout = GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1)
+
+    // val size = 480 / 2
+    var width: Int = 240
+    var height: Int = 240
     var image: Image? = null
+
+    val zoom = 1
 
     val nodeSize = 24 / 2
     val nodeList = mutableListOf<Node>()
@@ -29,17 +35,19 @@ class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDE
 
     var createNodes = true
 
+    // TODO: Measure internal angles from vertex shapes
+
     init {
         this.background = Display.getDefault().getSystemColor(SWT.COLOR_WHITE)
 
         this.addPaintListener(object : PaintListener {
             override fun paintControl(event: PaintEvent) {
-                val destX = (clientArea.width / 2) - (size / 2)
-                val destY = (clientArea.height / 2) - (size / 2)
+                val destX = (clientArea.width / 2) - (width / 2)
+                val destY = (clientArea.height / 2) - (height / 2)
 
                 val halfSize = (nodeSize / 2)
-                val pattern = listOf(listOf(destX - halfSize, destY - halfSize), listOf(destX - halfSize + size, destY - halfSize),
-                        listOf(destX - halfSize + size, destY - halfSize + size), listOf(destX - halfSize, destY - halfSize + size))
+                val pattern = listOf(listOf(destX - halfSize, destY - halfSize), listOf(destX - halfSize + width, destY - halfSize),
+                        listOf(destX - halfSize + width, destY - halfSize + height), listOf(destX - halfSize, destY - halfSize + height))
 
                 if (createNodes) {
                     createNodes = false
@@ -52,7 +60,9 @@ class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDE
 
                 // val image = Image(display, javaClass.classLoader.getResource("sprites/pig/idle/pig_idle_0.png").path)
                 if (image != null) {
-                    event.gc.drawImage(image, 0, 0, image!!.bounds.width, image!!.bounds.height, destX, destY, size, size)
+                    width = image!!.bounds.width * 15
+                    height = image!!.bounds.height * 15
+                    event.gc.drawImage(image, 0, 0, image!!.bounds.width, image!!.bounds.height, destX, destY, width, height)
                     // image!!.dispose()
                 }
 
@@ -149,6 +159,9 @@ class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDE
                     for (name in fileNames) {
                         image = Image(self.display, name.toString())
                     }
+
+                    width = image!!.bounds.width
+                    height = image!!.bounds.height
                 }
             }
 
@@ -184,10 +197,15 @@ class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDE
             }
         })
 
-        val layout = GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1)
-        layout.widthHint = size * 2
-        layout.heightHint = size * 2
+        layout.widthHint = width * 2
+        layout.heightHint = height * 2
         layout.verticalSpan = 2
+
+        this.horizontalBar.maximum = width
+        this.horizontalBar.thumb = width
+
+        this.verticalBar.maximum = height
+        this.verticalBar.thumb = width
 
         this.layoutData = layout
     }

@@ -49,14 +49,14 @@ class SideBar(parent: Composite, val boarWidget: BoarWidget) {
         Label(nodeGroup, SWT.NONE).text = "X"
         spinnerX = Spinner(nodeGroup, SWT.BORDER)
         spinnerX.digits = 0
-        spinnerX.minimum = -boarWidget.size
-        spinnerX.maximum = boarWidget.size
+        spinnerX.minimum = -boarWidget.width
+        spinnerX.maximum = boarWidget.height
         spinnerX.layoutData = spinnerData
         Label(nodeGroup, SWT.NONE).text = "Y"
         spinnerY = Spinner(nodeGroup, SWT.BORDER)
         spinnerY.digits = 0
-        spinnerY.minimum = -boarWidget.size
-        spinnerY.maximum = boarWidget.size
+        spinnerY.minimum = -boarWidget.width
+        spinnerY.maximum = boarWidget.height
         spinnerY.layoutData = spinnerData
 
         spinnerX.addModifyListener(object : ModifyListener {
