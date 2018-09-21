@@ -19,6 +19,12 @@ fun main(args: Array<String>) {
     val sideBar = SideBar(shell, boarWidget)
     boarWidget.sideBar = sideBar
 
+    val timelineWidget = TimelineWidget(shell, boarWidget)
+    val gridLayout = GridLayout()
+    gridLayout.numColumns = 30
+    timelineWidget.layout = gridLayout
+    boarWidget.timelineWidget = timelineWidget
+
     boarWidget.setFocus()
 
     shell.pack()

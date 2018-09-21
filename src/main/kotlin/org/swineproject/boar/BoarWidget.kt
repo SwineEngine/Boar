@@ -14,6 +14,9 @@ import org.eclipse.swt.widgets.*
 class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDER or SWT.H_SCROLL or SWT.V_SCROLL) {
     val self = this
     lateinit var sideBar: SideBar
+    lateinit var timelineWidget: TimelineWidget
+
+    val spriteList = mutableListOf<Image>()
 
     val layout = GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1)
 
@@ -157,11 +160,18 @@ class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDE
                     val fileNames = event.data as Array<*>
 
                     for (name in fileNames) {
-                        image = Image(self.display, name.toString())
+                        val img = Image(self.display, name.toString())
+                        spriteList.add(img)
+
+                        if (name == fileNames[0]) {
+                            image = img
+                        }
                     }
 
                     width = image!!.bounds.width
                     height = image!!.bounds.height
+
+                    timelineWidget.addButtons()
                 }
             }
 
@@ -178,14 +188,9 @@ class BoarWidget(display: Display, parent: Composite) : Canvas(parent, SWT.BORDE
 
                         val files = (fileTransfer.nativeToJava(event.currentDataType) as Array<String>).toList()
 
-                        if (files.size != 1) {
-                            event.detail = DND.DROP_NONE
-                        }
-                        else {
-                            for (i in files) {
-                                if (i.split(".")[1] !in listOf("png", "jpg", "jpeg")) {
-                                    event.detail = DND.DROP_NONE
-                                }
+                        for (i in files) {
+                            if (i.split(".")[1] !in listOf("png", "jpg", "jpeg")) {
+                                event.detail = DND.DROP_NONE
                             }
                         }
                     }
