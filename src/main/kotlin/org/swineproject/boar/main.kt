@@ -21,7 +21,7 @@ fun main(args: Array<String>) {
 
     val timelineWidget = TimelineWidget(shell, boarWidget)
     val gridLayout = GridLayout()
-    gridLayout.numColumns = 30
+    gridLayout.numColumns = 1
     timelineWidget.layout = gridLayout
     boarWidget.timelineWidget = timelineWidget
 
