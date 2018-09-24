@@ -37,8 +37,11 @@ class TimelineWidget(parent: Composite, val boarWidget: BoarWidget) : Composite(
         val backwardButton = Button(actionWidget, SWT.PUSH)
         backwardButton.text = "<-"
 
-        // val playButton = Button(actionWidget, SWT.PUSH)
-        // playButton.text = "|>"
+        val playButton = Button(actionWidget, SWT.CHECK)
+        playButton.text = ">"
+
+        val stopButton = Button(actionWidget, SWT.PUSH)
+        stopButton.text = "[ ]"
 
         val forwardButton = Button(actionWidget, SWT.PUSH)
         forwardButton.text = "->"
@@ -46,8 +49,8 @@ class TimelineWidget(parent: Composite, val boarWidget: BoarWidget) : Composite(
         val lastForwardButton = Button(actionWidget, SWT.PUSH)
         lastForwardButton.text = ">>"
 
-        // val stopButton = Button(actionWidget, SWT.PUSH)
-        // stopButton.text = "[]"
+        // val loopButton = Button(actionWidget, SWT.CHECK)
+        // loopButton.text = "<>"
 
         // TODO: Add a separator
 
@@ -60,9 +63,11 @@ class TimelineWidget(parent: Composite, val boarWidget: BoarWidget) : Composite(
 
         lastBackwardButton.addSelectionListener(object : SelectionListener {
             override fun widgetSelected(event: SelectionEvent) {
-                frame = 0
-                boarWidget.image = boarWidget.spriteList[frame]
-                buttonList[frame].setFocus()
+                if (boarWidget.spriteList.size > 0) {
+                    frame = 0
+                    boarWidget.image = boarWidget.spriteList[frame]
+                    buttonList[frame].setFocus()
+                }
             }
 
             override fun widgetDefaultSelected(event: SelectionEvent) {
@@ -72,15 +77,28 @@ class TimelineWidget(parent: Composite, val boarWidget: BoarWidget) : Composite(
 
         backwardButton.addSelectionListener(object : SelectionListener {
             override fun widgetSelected(event: SelectionEvent) {
-                frame = if (frame > 0) {
-                    frame - 1
-                }
-                else {
-                    boarWidget.spriteList.size - 1
-                }
+                if (boarWidget.spriteList.size > 0) {
+                    frame = if (frame > 0) {
+                        frame - 1
+                    }
+                    else {
+                        boarWidget.spriteList.size - 1
+                    }
 
-                boarWidget.image = boarWidget.spriteList[frame]
-                buttonList[frame].setFocus()
+                    boarWidget.image = boarWidget.spriteList[frame]
+                    buttonList[frame].setFocus()
+                }
+            }
+
+            override fun widgetDefaultSelected(event: SelectionEvent) {
+                return
+            }
+        })
+
+        playButton.addSelectionListener(object : SelectionListener {
+            override fun widgetSelected(event: SelectionEvent) {
+                if (boarWidget.spriteList.size > 0) {
+                }
             }
 
             override fun widgetDefaultSelected(event: SelectionEvent) {
@@ -90,15 +108,17 @@ class TimelineWidget(parent: Composite, val boarWidget: BoarWidget) : Composite(
 
         forwardButton.addSelectionListener(object : SelectionListener {
             override fun widgetSelected(event: SelectionEvent) {
-                frame = if (frame < boarWidget.spriteList.size - 1) {
-                    frame + 1
+                if (boarWidget.spriteList.size > 0) {
+                    frame = if (frame < boarWidget.spriteList.size - 1) {
+                        frame + 1
+                    }
+                    else {
+                        0
+                    }
+
+                    boarWidget.image = boarWidget.spriteList[frame]
+                    buttonList[frame].setFocus()
                 }
-                else {
-                    0
-                }
-                
-                boarWidget.image = boarWidget.spriteList[frame]
-                buttonList[frame].setFocus()
             }
 
             override fun widgetDefaultSelected(event: SelectionEvent) {
@@ -108,9 +128,11 @@ class TimelineWidget(parent: Composite, val boarWidget: BoarWidget) : Composite(
 
         lastForwardButton.addSelectionListener(object : SelectionListener {
             override fun widgetSelected(event: SelectionEvent) {
-                frame = boarWidget.spriteList.size - 1
-                boarWidget.image = boarWidget.spriteList[frame]
-                buttonList[frame].setFocus()
+                if (boarWidget.spriteList.size > 0) {
+                    frame = boarWidget.spriteList.size - 1
+                    boarWidget.image = boarWidget.spriteList[frame]
+                    buttonList[frame].setFocus()
+                }
             }
 
             override fun widgetDefaultSelected(event: SelectionEvent) {
