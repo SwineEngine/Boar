@@ -72,7 +72,13 @@ class TimelineWidget(parent: Composite, val boarWidget: BoarWidget) : Composite(
 
         backwardButton.addSelectionListener(object : SelectionListener {
             override fun widgetSelected(event: SelectionEvent) {
-                frame -= 1
+                frame = if (frame > 0) {
+                    frame - 1
+                }
+                else {
+                    boarWidget.spriteList.size - 1
+                }
+
                 boarWidget.image = boarWidget.spriteList[frame]
                 buttonList[frame].setFocus()
             }
@@ -84,7 +90,13 @@ class TimelineWidget(parent: Composite, val boarWidget: BoarWidget) : Composite(
 
         forwardButton.addSelectionListener(object : SelectionListener {
             override fun widgetSelected(event: SelectionEvent) {
-                frame += 1
+                frame = if (frame < boarWidget.spriteList.size - 1) {
+                    frame + 1
+                }
+                else {
+                    0
+                }
+                
                 boarWidget.image = boarWidget.spriteList[frame]
                 buttonList[frame].setFocus()
             }
@@ -96,7 +108,7 @@ class TimelineWidget(parent: Composite, val boarWidget: BoarWidget) : Composite(
 
         lastForwardButton.addSelectionListener(object : SelectionListener {
             override fun widgetSelected(event: SelectionEvent) {
-                frame = boarWidget.spriteList.size
+                frame = boarWidget.spriteList.size - 1
                 boarWidget.image = boarWidget.spriteList[frame]
                 buttonList[frame].setFocus()
             }
