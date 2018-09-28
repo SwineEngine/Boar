@@ -1,21 +1,33 @@
 package org.swineproject.boar
 
 import org.eclipse.swt.SWT
+import org.eclipse.swt.custom.ScrolledComposite
 import org.eclipse.swt.events.SelectionEvent
 import org.eclipse.swt.events.SelectionListener
+import org.eclipse.swt.graphics.Image
 import org.eclipse.swt.layout.GridData
 import org.eclipse.swt.layout.GridLayout
 import org.eclipse.swt.widgets.*
 
 class TimelineWidget(parent: Composite, val boarWidget: BoarWidget) : Composite(parent, SWT.BORDER) {
     var actionWidget = Group(this, SWT.NULL)
-    var framesWidget = Group(this, SWT.NULL)
+
+    var frameScroll = ScrolledComposite(this, SWT.H_SCROLL)
+    var framesWidget = Group(frameScroll, SWT.NULL)
 
     val buttonList = mutableListOf<Button>()
     var frame = 0
 
     init {
+        frameScroll.expandHorizontal = true
+        frameScroll.expandVertical = true
+        frameScroll.setMinSize(800, 90)
+        frameScroll.content = framesWidget
+
         var layoutData = GridData(GridData.FILL_BOTH)
+        frameScroll.layoutData = layoutData
+
+        layoutData = GridData(GridData.FILL_BOTH)
         layoutData.horizontalSpan = 2
         this.layoutData = layoutData
 
