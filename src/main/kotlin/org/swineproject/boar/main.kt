@@ -9,6 +9,7 @@ fun main(args: Array<String>) {
     val display = Display()
     val shell = Shell(display)
     shell.text = "Boar"
+    shell.setMinimumSize(800, 740)
 
     val layout = GridLayout()
     layout.numColumns = 2
