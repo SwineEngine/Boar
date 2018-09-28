@@ -145,7 +145,7 @@ class TimelineWidget(parent: Composite, val boarWidget: BoarWidget) : Composite(
         for (i in boarWidget.spriteList) {
             // TODO: Center buttons
             val button = Button(framesWidget, SWT.PUSH or SWT.CENTER)
-            button.image = i
+            button.image = Image(display, i.imageData.scaledTo(64, 64))
             buttonList.add(button)
 
             button.addSelectionListener(object : SelectionListener {
